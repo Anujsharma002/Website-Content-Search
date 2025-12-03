@@ -1,0 +1,150 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f7f8fa;
+  font-family: "Inter", sans-serif;
+  color: #333;
+}
+
+.app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.input-with-button {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon-img {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.input-with-left-icon {
+  padding-left: 40px !important;
+}
+
+.input-inner {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 110px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.inner-search-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.inner-search-btn:hover {
+  background: #1e4fd1;
+}
+
+.search-btn:hover {
+  background: #1e4fd1;
+}
+
+.results-title {
+  margin-top: 30px;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.result-card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #e4e4e4;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.05);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.match-badge {
+  background: #dbf7df;
+  padding: 4px 10px;
+  color: #0a8f2f;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 13px;
+  float: right;
+}
+
+.result-title {
+  margin-top: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #222;
+}
+
+.result-path {
+  font-size: 13px;
+  color: #767676;
+  margin: 4px 0 10px 0;
+}
+
+.view-html-toggle {
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  user-select: none;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.html-preview {
+  background: #f5f7ff;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #d8e1ff;
+  font-size: 13px;
+  white-space: pre-wrap;
+  font-family: "Courier New", monospace;
+}
