@@ -67,8 +67,8 @@ services:
     volumes:
       - /data/milvus/milvus:/var/lib/milvus
     ports:
-      - "19530:19530"   # Milvus search API
-      - "9091:9091"     # Milvus dashboard
+      - "19530:19530"
+      - "9091:9091"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
       interval: 30s
@@ -80,8 +80,8 @@ services:
   # ---------------------------------------------------------
   backend:
     build:
-      context: .
-      dockerfile: Backend/Dockerfile
+      context: Backend     # ← FIXED
+      dockerfile: Dockerfile
     container_name: web-backend
     restart: always
     environment:
@@ -97,14 +97,14 @@ services:
   # ---------------------------------------------------------
   frontend:
     build:
-      context: .
-      dockerfile:  Frontend/Dockerfile
+      context: Frontend    # ← FIXED
+      dockerfile: Dockerfile
     container_name: web-frontend
     restart: always
     depends_on:
       - backend
     ports:
-      - "80:80"   # Public website exposed here
+      - "80:80"
 
 # ---------------------------------------------------------
 # NETWORK
