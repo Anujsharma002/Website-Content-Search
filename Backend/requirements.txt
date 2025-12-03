@@ -2,8 +2,13 @@ fastapi
 uvicorn[standard]
 httpx
 beautifulsoup4
-transformers
-sentence-transformers
 pymilvus>=2.4.0
 numpy
 python-multipart
+
+# CPU-only Torch (no CUDA)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.0
+
+# Lightweight sentence-transformers
+sentence-transformers==2.2.2

@@ -81,7 +81,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Backend/Dockerfile
     container_name: web-backend
     restart: always
     environment:
@@ -98,7 +98,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile:  Frontend/Dockerfile
     container_name: web-frontend
     restart: always
     depends_on:
