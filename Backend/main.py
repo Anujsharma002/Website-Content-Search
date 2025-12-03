@@ -15,7 +15,8 @@ from fastapi.middleware.cors import CORSMiddleware
 MILVUS_URI = "http://localhost:19530"
 TOKEN = "root:Milvus"
 COLLECTION = "semantic_blocks"
-EMBEDDING_DIM = 384
+EMBEDDING_DIM = 384  
+
 
 app = FastAPI(title="Web Semantic Block Search API")
 
@@ -27,8 +28,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 embedder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
 
 class SearchRequest(BaseModel):
@@ -43,8 +47,23 @@ class SearchResult(BaseModel):
     score: float
 
 
+def chunk_by_tokens(text: str, max_tokens: int = 500):
+    tokens = tokenizer.encode(text)
+    chunks = []
+
+    for i in range(0, len(tokens), max_tokens):
+        chunk_tokens = tokens[i:i + max_tokens]
+        chunk_text = tokenizer.decode(chunk_tokens).strip()
+        chunks.append(chunk_text)
+
+    return chunks
+
+
+# -----------------------------
+# HTML BLOCK EXTRACTION
+# -----------------------------
 def extract_blocks(url: str) -> List[dict]:
-    """Extract readable blocks while keeping only class attribute."""
+    """Extract readable HTML blocks and split them into max-500 token chunks."""
     try:
         html = requests.get(url, timeout=10).text
     except Exception as e:
@@ -62,23 +81,27 @@ def extract_blocks(url: str) -> List[dict]:
         if not tag.get("class"):
             continue
 
+        full_html = str(tag)
         text = tag.get_text(" ", strip=True)
+
         if len(text) < 25:
             continue
 
-        clone = BeautifulSoup(str(tag), "html.parser")
+        clone = BeautifulSoup(full_html, "html.parser")
         for el in clone.find_all(True):
             if "class" in el.attrs:
                 el.attrs = {"class": el.attrs["class"]}
             else:
                 el.attrs = {}
+        clean_html = str(clone)
 
-        html_clean = str(clone)
+        token_chunks = chunk_by_tokens(text, max_tokens=500)
 
-        blocks.append({
-            "content": text,
-            "html_content": html_clean
-        })
+        for chunk in token_chunks:
+            blocks.append({
+                "content": chunk,
+                "html_content": clean_html
+            })
 
     if not blocks:
         raise HTTPException(400, "No valid content extracted.")
@@ -92,7 +115,6 @@ def dedupe_blocks(blocks):
 
     for b in blocks:
         norm_text = " ".join(b["content"].lower().split())
-
         if norm_text not in seen:
             seen.add(norm_text)
             unique.append(b)
@@ -106,7 +128,6 @@ def dedupe_hits(hits):
 
     for h in hits:
         norm_text = " ".join(h["content"].lower().split())
-
         if norm_text not in seen:
             seen.add(norm_text)
             unique.append(h)
@@ -208,13 +229,9 @@ def search(req: SearchRequest):
     milvus.insert(blocks, vectors)
 
     ann_hits = milvus.search(req.query, req.top_k)
-
     ann_hits = dedupe_hits(ann_hits)
 
-    results = rerank(req.query, ann_hits)
-
-    return results
-
+    return rerank(req.query, ann_hits)
 
 if __name__ == "__main__":
     import uvicorn
