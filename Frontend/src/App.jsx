@@ -6,20 +6,23 @@ import "./App.css";
 function App() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
+  
   function dedupeFrontend(results) {
   const seen = new Set();
   const unique = [];
 
   for (const item of results) {
-    const text = item.content.trim();
-    if (!seen.has(text)) {
-      seen.add(text);
+    const key = item.html_content; 
+
+    if (!seen.has(key)) {
+      seen.add(key);
       unique.push(item);
     }
   }
 
   return unique;
 }
+
 
  async function handleSearch(url, query) {
   try {
@@ -33,7 +36,7 @@ function App() {
 
     const data = await res.json();
     const uniqueResults = dedupeFrontend(data);
-
+    console.log(uniqueResults);
     setResults(uniqueResults);
   } catch (error) {
     console.error("Search failed:", error);

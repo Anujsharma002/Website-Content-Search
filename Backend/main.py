@@ -59,9 +59,6 @@ def chunk_by_tokens(text: str, max_tokens: int = 500):
     return chunks
 
 
-# -----------------------------
-# HTML BLOCK EXTRACTION
-# -----------------------------
 def extract_blocks(url: str) -> List[dict]:
     """Extract readable HTML blocks and split them into max-500 token chunks."""
     try:
@@ -201,7 +198,7 @@ milvus = MilvusDB()
 
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
-
+# 0->1 
 
 def rerank(query, hits):
     if not hits:
